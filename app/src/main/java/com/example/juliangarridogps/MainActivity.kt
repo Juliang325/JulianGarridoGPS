@@ -8,8 +8,12 @@ import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputLayout
 
 class MainActivity : AppCompatActivity(), LocationListener {
 
@@ -28,6 +32,34 @@ class MainActivity : AppCompatActivity(), LocationListener {
             // Permiso de ubicación otorgado, obtener la ubicación actual
             obtainLocation()
         }
+        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab.setOnClickListener {
+            showCoordinateInputDialog()
+        }
+    }
+
+    private fun showCoordinateInputDialog() {
+        val inputLayout = TextInputLayout(this)
+        val input = EditText(inputLayout.context)
+        input.hint = "Introducir coordenadas"
+        inputLayout.setPadding(50, 0, 50, 0)
+        inputLayout.addView(input)
+
+        val dialog = AlertDialog.Builder(this)
+        .setTitle("Introducir Coordenadas")
+            .setView(inputLayout)
+            .setPositiveButton("Aceptar") { dialog, which ->
+                val latitud = input.text.toString()
+                val longitud = input.text.toString()
+                // Aquí puedes hacer algo con las coordenadas introducidas por el usuario
+                // Por ejemplo, calcular la distancia entre la ubicación actual y las coordenadas introducidas
+                // o almacenarlas en tu <link>ViewModel</link>
+                Log.d("Coordenadas", "Coordenadas introducidas -> Latitud:$latitud Longitud:$longitud")
+            }
+            .setNegativeButton("Cancelar", null)
+            .create()
+
+        dialog.show()
     }
 
     private fun obtainLocation() {
